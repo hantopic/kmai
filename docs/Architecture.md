@@ -1,5 +1,12 @@
 # KMAI Platform Architecture
 
+**Document ID:** KMAI-ARCH-001
+**Version:** 0.1.0  
+**Status:** Phase 1 – Thyroid Ultrasound Consensus Platform  
+**Last Updated:** July 2026
+
+---
+
 ## 1. Overview
 
 KMAI Platform is a modular, web-based, multimodal AI platform for Korean Medicine.
