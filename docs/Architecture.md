@@ -18,7 +18,32 @@ The initial version focuses on thyroid ultrasound images, but the architecture i
 
 ---
 
-## 2. System Architecture
+## 2. Architecture Philosophy
+
+KMAI Platform is designed based on four fundamental principles.
+
+### 1. Modular Design
+
+Every clinical domain (thyroid, carotid, abdomen, shoulder, tongue, voice, etc.) is implemented as an independent module while sharing a common platform architecture.
+
+### 2. Human-in-the-loop AI
+
+KMAI prioritizes expert knowledge over automated decision-making.
+
+Rather than allowing AI to generate labels directly, expert clinicians independently review medical images and establish consensus labels. These verified labels become the foundation for AI model training.
+
+### 3. Clinical Validation First
+
+The primary objective is not to develop AI models rapidly, but to establish clinically validated, high-quality datasets that can support reliable AI development.
+
+### 4. Continuous Learning
+
+KMAI is designed as a continuously evolving platform.
+
+As new expert-reviewed cases accumulate, datasets are expanded, AI models are retrained, and system performance is continuously improved.
+
+
+## 3. System Architecture
 
 ```text
                          KMAI Platform
@@ -67,7 +92,7 @@ The initial version focuses on thyroid ultrasound images, but the architecture i
 
 ---
 
-## 3. Core Design Principles
+## 4. Core Design Principles
 
 ### 3.1 Modular Architecture
 
@@ -105,7 +130,7 @@ Report Generation
 
 ---
 
-## 4. Phase 1 Architecture
+## 5. Phase 1 Architecture
 
 Phase 1 focuses on thyroid ultrasound consensus labeling.
 
@@ -135,7 +160,7 @@ Instead, it focuses on building a high-quality expert-labeled dataset.
 
 ---
 
-## 5. User Roles
+## 6. User Roles
 
 ### Admin
 
@@ -166,7 +191,7 @@ Instead, it focuses on building a high-quality expert-labeled dataset.
 
 ---
 
-## 6. Data Flow
+## 7. Data Flow
 
 ```text
 1. Uploader uploads thyroid ultrasound image
@@ -182,7 +207,7 @@ Instead, it focuses on building a high-quality expert-labeled dataset.
 
 ---
 
-## 7. Technology Stack
+## 8. Technology Stack
 
 ### Frontend
 
@@ -224,7 +249,7 @@ Instead, it focuses on building a high-quality expert-labeled dataset.
 
 ---
 
-## 8. Database Architecture Summary
+## 9. Database Architecture Summary
 
 The initial database structure includes:
 
@@ -252,7 +277,7 @@ rag_documents
 
 ---
 
-## 9. Security and Privacy Principles
+## 10. Security and Privacy Principles
 
 KMAI is designed with medical data protection in mind.
 
@@ -269,7 +294,7 @@ Key principles:
 
 ---
 
-## 10. Future Expansion
+## 11. Future Expansion
 
 KMAI is designed to evolve into a multimodal Korean Medicine AI platform.
 
@@ -289,7 +314,7 @@ Planned future modules:
 
 ---
 
-## 11. Long-Term Vision
+## 12. Long-Term Vision
 
 The long-term goal of KMAI is to become a Korean Medicine precision medicine AI platform.
 
