@@ -1,6 +1,6 @@
 # KMAI Platform Architecture
 
-**Document ID:** KMAI-ARCH-001
+**Document ID:** KMAI-ARCH-001  
 **Version:** 0.1.0  
 **Status:** Phase 1 – Thyroid Ultrasound Consensus Platform  
 **Last Updated:** July 2026
