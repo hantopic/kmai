@@ -6,11 +6,13 @@ from app.api.v1.auth import router as auth_router
 from app.api.v1.users import router as users_router
 from app.api.v1.projects import router as projects_router
 from app.api.v1.medical_images import router as medical_images_router
+from app.api.v1.annotations import router as annotations_router
 
 from app.core.database import Base, engine
 from app.models.user import User
 from app.models.project import Project
 from app.models.medical_image import MedicalImage
+from app.models.annotation import Annotation
 
 Base.metadata.create_all(bind=engine)
 
@@ -27,6 +29,12 @@ app.include_router(auth_router, prefix="/api/v1", tags=["auth"])
 app.include_router(users_router, prefix="/api/v1", tags=["users"])
 app.include_router(projects_router, prefix="/api/v1", tags=["projects"])
 app.include_router(medical_images_router, prefix="/api/v1", tags=["medical images"])
+app.include_router(
+    annotations_router,
+    prefix="/api/v1",
+    tags=["annotations"],
+)
+
 
 
 @app.get("/")

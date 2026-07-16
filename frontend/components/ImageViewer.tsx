@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import AnnotationCanvas from "./AnnotationCanvas";
 
 export type ViewerImage = {
   id: string;
@@ -34,12 +35,14 @@ export default function ImageViewer({
 }: ImageViewerProps) {
   const viewerRef = useRef<HTMLDivElement>(null);
 
+  const [mode, setMode] = useState<"view" | "annotate">("view");
   const [zoom, setZoom] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [showMetadata, setShowMetadata] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
+
 
   function resetView() {
     setZoom(1);
@@ -169,6 +172,33 @@ export default function ImageViewer({
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
+              onClick={() => {
+                setMode("view");
+                setPosition({ x: 0, y: 0 });
+              }}
+              className={`rounded-lg px-4 py-2 text-sm font-medium ${mode === "view"
+                  ? "bg-blue-700 text-white"
+                  : "bg-slate-200 text-slate-900 hover:bg-slate-300"
+                }`}
+            >
+              View
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setMode("annotate");
+                setPosition({ x: 0, y: 0 });
+              }}
+              className={`rounded-lg px-4 py-2 text-sm font-medium ${mode === "annotate"
+                ? "bg-blue-700 text-white"
+                : "bg-slate-200 text-slate-900 hover:bg-slate-300"
+                }`}
+            >
+              Annotate
+            </button>
+            <button
+              type="button"
               onClick={zoomOut}
               className="rounded-lg bg-slate-200 px-4 py-2 text-sm font-medium text-slate-900 hover:bg-slate-300"
             >
@@ -230,40 +260,50 @@ export default function ImageViewer({
         </header>
 
         <div
-          className={`grid min-h-0 flex-1 ${
-            showMetadata ? "grid-cols-1 lg:grid-cols-[1fr_320px]" : "grid-cols-1"
-          }`}
+          className={`grid min-h-0 flex-1 ${showMetadata ? "grid-cols-1 lg:grid-cols-[1fr_320px]" : "grid-cols-1"
+            }`}
         >
-          <div
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
-            className={`relative flex min-h-[65vh] touch-none items-center justify-center overflow-hidden bg-black ${
-              zoom > 1
+          {mode === "view" ? (
+            <div
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
+              className={`relative flex min-h-[65vh] touch-none items-center justify-center overflow-hidden bg-black ${zoom > 1
                 ? isDragging
                   ? "cursor-grabbing"
                   : "cursor-grab"
                 : "cursor-default"
-            }`}
-          >
-            <img
-              src={imageUrl}
-              alt={image.image_uid}
-              draggable={false}
-              style={{
-                transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})`,
-                transformOrigin: "center center",
-              }}
-              className="max-h-[78vh] max-w-full select-none object-contain"
-            />
+                }`}
+            >
+              <img
+                src={imageUrl}
+                alt={image.image_uid}
+                draggable={false}
+                style={{
+                  transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})`,
+                  transformOrigin: "center center",
+                }}
+                className="max-h-[78vh] max-w-full select-none object-contain"
+              />
 
-            <div className="pointer-events-none absolute bottom-3 left-3 rounded-md bg-black/60 px-3 py-1 text-xs text-white">
-              {zoom > 1
-                ? "Drag the image to move it"
-                : "Zoom in to enable dragging"}
+              <div className="pointer-events-none absolute bottom-3 left-3 rounded-md bg-black/60 px-3 py-1 text-xs text-white">
+                {zoom > 1
+                  ? "Drag the image to move it"
+                  : "Zoom in to enable dragging"}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="min-h-0 overflow-y-auto bg-slate-100 p-4">
+              <AnnotationCanvas
+                imageId={image.id}
+                imageUrl={imageUrl}
+                imageUid={image.image_uid}
+                originalFilename={image.original_filename}
+                zoom={zoom}
+              />
+            </div>
+          )}
 
           {showMetadata && (
             <aside className="overflow-y-auto border-l border-slate-200 bg-white p-5">
@@ -340,9 +380,8 @@ function MetadataItem({
         {label}
       </dt>
       <dd
-        className={`mt-1 text-slate-900 ${
-          breakAll ? "break-all font-mono text-xs" : ""
-        }`}
+        className={`mt-1 text-slate-900 ${breakAll ? "break-all font-mono text-xs" : ""
+          }`}
       >
         {value}
       </dd>

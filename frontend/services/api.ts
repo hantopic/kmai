@@ -114,3 +114,116 @@ export async function getMedicalImages(projectId?: string) {
 
   return res.json();
 }
+export type Annotation = {
+  id: string;
+  image_id: string;
+  reviewer_id?: string | null;
+  annotation_type: "rectangle";
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  label?: string | null;
+  comment?: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type AnnotationCreate = {
+  image_id: string;
+  annotation_type: "rectangle";
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  label?: string;
+  comment?: string;
+};
+
+function getAuthHeaders() {
+  const token = localStorage.getItem("kmai_token");
+
+  if (!token) {
+    throw new Error("Authentication token not found");
+  }
+
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+}
+
+export async function getAnnotations(
+  imageId: string
+): Promise<Annotation[]> {
+  const params = new URLSearchParams({ image_id: imageId });
+
+  const response = await fetch(`/api/v1/annotations?${params.toString()}`, {
+    headers: getAuthHeaders(),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to load annotations");
+  }
+
+  return response.json();
+}
+
+export async function createAnnotation(
+  data: AnnotationCreate
+): Promise<Annotation> {
+  const response = await fetch("/api/v1/annotations", {
+    method: "POST",
+    headers: {
+      ...getAuthHeaders(),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(errorBody?.detail || "Failed to create annotation");
+  }
+
+  return response.json();
+}
+
+export async function updateAnnotation(
+  annotationId: string,
+  data: Partial<
+    Pick<
+      AnnotationCreate,
+      "x" | "y" | "width" | "height" | "label" | "comment"
+    >
+  >
+): Promise<Annotation> {
+  const response = await fetch(`/api/v1/annotations/${annotationId}`, {
+    method: "PATCH",
+    headers: {
+      ...getAuthHeaders(),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(errorBody?.detail || "Failed to update annotation");
+  }
+
+  return response.json();
+}
+
+export async function deleteAnnotation(
+  annotationId: string
+): Promise<void> {
+  const response = await fetch(`/api/v1/annotations/${annotationId}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(errorBody?.detail || "Failed to delete annotation");
+  }
+}
